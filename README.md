@@ -3,6 +3,7 @@
 [![Language](https://img.shields.io/badge/Language-Go-blue.svg)](https://golang.org/)
 [![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/chinalhr/go-stream)](https://img.shields.io/github/go-mod/go-version/chinalhr/go-stream)
 [![Release](https://img.shields.io/github/v/release/chinalhr/go-stream.svg?style=flat-square)](https://github.com/chinalhr/go-stream)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ChinaLHR/go-stream/Build)](https://github.com/ChinaLHR/go-stream/actions/workflows/build.yaml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/chinalhr/go-stream)](https://goreportcard.com/report/github.com/chinalhr/go-stream)
 [![codecov](https://codecov.io/gh/chinalhr/go-stream/branch/main/graph/badge.svg?token=ZHMPMQP0CP)](https://codecov.io/gh/chinalhr/go-stream)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/chinalhr/go-stream/blob/main/LICENSE)
