@@ -173,6 +173,14 @@ func TestStream_Filter(t *testing.T) {
 			actual: []types.T{2, 4},
 		},
 		{
+			name: "emptyCase",
+			fn: func(e types.T) bool {
+				return e.(int)%2 == 0
+			},
+			input:  []types.T{},
+			actual: []types.T{},
+		},
+		{
 			name:   "nilCase",
 			fn:     nil,
 			input:  nil,
@@ -204,6 +212,14 @@ func TestStream_Map(t *testing.T) {
 			},
 			input:  []types.T{1, 2, 3, 4, 5},
 			actual: []types.T{"1", "4", "9", "16", "25"},
+		},
+		{
+			name: "emptyCase",
+			fn: func(e types.T) types.R {
+				return strconv.Itoa(e.(int) * e.(int))
+			},
+			input:  []types.T{},
+			actual: []types.T{},
 		},
 		{
 			name:   "nilCase",
@@ -239,6 +255,14 @@ func TestStream_Peek(t *testing.T) {
 			actual: []types.T{1, 2, 3, 4, 5},
 		},
 		{
+			name: "emptyCase",
+			fn: func(e types.T) {
+				strconv.Itoa(e.(int) * e.(int))
+			},
+			input:  []types.T{},
+			actual: []types.T{},
+		},
+		{
 			name:   "nilCase",
 			fn:     nil,
 			input:  nil,
@@ -270,6 +294,14 @@ func TestStream_FlatMap(t *testing.T) {
 			},
 			input:  [][]types.T{{1, 2, 3}, {4, 5}},
 			actual: []types.T{1, 2, 3, 4, 5},
+		},
+		{
+			name: "emptyCase",
+			fn: func(t types.T) Stream {
+				return OfSlice(t)
+			},
+			input:  [][]types.T{},
+			actual: []types.T{},
 		},
 		{
 			name:   "nilCase",
@@ -307,6 +339,14 @@ func TestStream_Distinct(t *testing.T) {
 			actual: []types.T{1, 2, 3, 4, 5},
 		},
 		{
+			name: "emptyCase",
+			fn: func(t types.T) types.R {
+				return t
+			},
+			input:  []types.T{},
+			actual: []types.T{},
+		},
+		{
 			name:   "nilCase",
 			fn:     nil,
 			input:  nil,
@@ -340,6 +380,14 @@ func TestStream_Sorted(t *testing.T) {
 			actual: []types.T{1, 2, 3, 4, 5},
 		},
 		{
+			name: "emptyCase",
+			compare: func(first types.T, second types.T) int {
+				return first.(int) - second.(int)
+			},
+			input:  []types.T{},
+			actual: []types.T{},
+		},
+		{
 			name:    "nilCase",
 			compare: nil,
 			input:   nil,
@@ -371,6 +419,12 @@ func TestStream_Skip(t *testing.T) {
 			actual: []types.T{4, 5},
 		},
 		{
+			name:   "emptyCase",
+			skip:   3,
+			input:  []types.T{},
+			actual: []types.T{},
+		},
+		{
 			name:   "nilCase",
 			skip:   0,
 			input:  nil,
@@ -400,6 +454,12 @@ func TestStream_Limit(t *testing.T) {
 			limit:  3,
 			input:  []types.T{1, 2, 3, 4, 5},
 			actual: []types.T{1, 2, 3},
+		},
+		{
+			name:   "emptyCase",
+			limit:  3,
+			input:  []types.T{},
+			actual: []types.T{},
 		},
 		{
 			name:   "nilCase",
@@ -435,6 +495,14 @@ func TestStream_TakeWhile(t *testing.T) {
 			actual: []types.T{1, 2, 3},
 		},
 		{
+			name: "emptyCase",
+			fn: func(t types.T) bool {
+				return t.(int) <= 3
+			},
+			input:  []types.T{},
+			actual: []types.T{},
+		},
+		{
 			name:   "nilCase",
 			fn:     nil,
 			input:  nil,
@@ -466,6 +534,14 @@ func TestStream_DropWhile(t *testing.T) {
 			},
 			input:  []types.T{1, 2, 3, 4, 5},
 			actual: []types.T{4, 5},
+		},
+		{
+			name: "emptyCase",
+			fn: func(t types.T) bool {
+				return t.(int) <= 3
+			},
+			input:  []types.T{},
+			actual: []types.T{},
 		},
 		{
 			name:   "nilCase",
@@ -532,6 +608,11 @@ func TestStream_FindLast(t *testing.T) {
 			actual: 5,
 		},
 		{
+			name:   "emptyCase",
+			input:  []types.T{},
+			actual: nil,
+		},
+		{
 			name:   "nilCase",
 			input:  nil,
 			actual: nil,
@@ -561,6 +642,14 @@ func TestStream_Reduce(t *testing.T) {
 			},
 			input:  []types.T{1, 2, 3, 4, 5},
 			actual: 15,
+		},
+		{
+			name: "emptyCase",
+			accumulator: func(e1 types.T, e2 types.T) types.T {
+				return e1.(int) + e2.(int)
+			},
+			input:  []types.T{},
+			actual: nil,
 		},
 		{
 			name:   "nilCase",
@@ -596,6 +685,15 @@ func TestStream_ReduceFromIdentity(t *testing.T) {
 			actual: 25,
 		},
 		{
+			name:     "emptyCase",
+			identity: 10,
+			accumulator: func(e1 types.T, e2 types.T) types.T {
+				return e1.(int) + e2.(int)
+			},
+			input:  []types.T{},
+			actual: 10,
+		},
+		{
 			name:   "nilCase",
 			input:  nil,
 			actual: nil,
@@ -621,6 +719,11 @@ func TestStream_Count(t *testing.T) {
 			name:   "normalCase",
 			input:  []types.T{1, 2, 3, 4, 5},
 			actual: 5,
+		},
+		{
+			name:   "emptyCase",
+			input:  []types.T{},
+			actual: 0,
 		},
 		{
 			name:   "nilCase",
@@ -652,6 +755,14 @@ func TestStream_Max(t *testing.T) {
 			},
 			input:  []types.T{6, 5, 9, 4, 2},
 			actual: 9,
+		},
+		{
+			name: "emptyCase",
+			compare: func(first types.T, second types.T) int {
+				return first.(int) - second.(int)
+			},
+			input:  []types.T{},
+			actual: nil,
 		},
 		{
 			name:    "nilCase",
@@ -686,6 +797,14 @@ func TestStream_Min(t *testing.T) {
 			actual: 2,
 		},
 		{
+			name: "emptyCase",
+			compare: func(first types.T, second types.T) int {
+				return first.(int) - second.(int)
+			},
+			input:  []types.T{},
+			actual: nil,
+		},
+		{
 			name:    "nilCase",
 			compare: nil,
 			input:   nil,
@@ -712,6 +831,11 @@ func TestStream_ToSlice(t *testing.T) {
 			name:   "normalCase",
 			input:  []types.T{5, 4, 3, 2, 1},
 			actual: []types.T{5, 4, 3, 2, 1},
+		},
+		{
+			name:   "emptyCase",
+			input:  []types.T{},
+			actual: []types.T{},
 		},
 		{
 			name:   "nilCase",
@@ -753,6 +877,17 @@ func TestStream_ToMap(t *testing.T) {
 				2: "[2]",
 				1: "[1]",
 			},
+		},
+		{
+			name: "emptyCase",
+			keyMapper: func(t types.T) types.K {
+				return t
+			},
+			valueMapper: func(t types.T) types.R {
+				return "[" + strconv.Itoa(t.(int)) + "]"
+			},
+			input:  []types.T{},
+			actual: map[types.K]types.R{},
 		},
 		{
 			name:   "nilCase",
@@ -797,6 +932,18 @@ func TestStream_GroupingBy(t *testing.T) {
 			},
 		},
 		{
+			name: "emptyCase",
+			classifier: func(t types.T) types.K {
+				if t.(int)%2 == 0 {
+					return true
+				} else {
+					return false
+				}
+			},
+			input:  []types.T{},
+			actual: map[types.K][]types.T{},
+		},
+		{
 			name:   "nilCase",
 			input:  nil,
 			actual: map[types.K][]types.T{},
@@ -832,7 +979,7 @@ func TestStream_AllMatch(t *testing.T) {
 			actual: false,
 		},
 		{
-			name: "MatchCase",
+			name: "matchCase",
 			fn: func(e types.T) bool {
 				if e.(int) < 10 {
 					return true
@@ -840,6 +987,17 @@ func TestStream_AllMatch(t *testing.T) {
 				return false
 			},
 			input:  []types.T{1, 2, 3, 4, 5},
+			actual: true,
+		},
+		{
+			name: "emptyCase",
+			fn: func(e types.T) bool {
+				if e.(int) < 10 {
+					return true
+				}
+				return false
+			},
+			input:  []types.T{},
 			actual: true,
 		},
 		{
@@ -878,7 +1036,7 @@ func TestStream_AnyMatch(t *testing.T) {
 			actual: false,
 		},
 		{
-			name: "MatchCase",
+			name: "matchCase",
 			fn: func(e types.T) bool {
 				if e.(int) == 1 {
 					return true
@@ -887,6 +1045,17 @@ func TestStream_AnyMatch(t *testing.T) {
 			},
 			input:  []types.T{1, 2, 3, 4, 5},
 			actual: true,
+		},
+		{
+			name: "emptyCase",
+			fn: func(e types.T) bool {
+				if e.(int) == 1 {
+					return true
+				}
+				return false
+			},
+			input:  []types.T{},
+			actual: false,
 		},
 		{
 			name:   "nilCase",
@@ -924,7 +1093,7 @@ func TestStream_NoneMatch(t *testing.T) {
 			actual: false,
 		},
 		{
-			name: "MatchCase",
+			name: "matchCase",
 			fn: func(e types.T) bool {
 				if e.(int) > 10 {
 					return true
@@ -932,6 +1101,17 @@ func TestStream_NoneMatch(t *testing.T) {
 				return false
 			},
 			input:  []types.T{1, 2, 3, 4, 5},
+			actual: true,
+		},
+		{
+			name: "emptyCase",
+			fn: func(e types.T) bool {
+				if e.(int) > 10 {
+					return true
+				}
+				return false
+			},
+			input:  []types.T{},
 			actual: true,
 		},
 		{
@@ -961,6 +1141,11 @@ func TestStream_FindFirst(t *testing.T) {
 			name:   "normalCase",
 			input:  []types.T{1, 2, 3, 4, 5},
 			actual: 1,
+		},
+		{
+			name:   "emptyCase",
+			input:  []types.T{},
+			actual: nil,
 		},
 		{
 			name:   "nilCase",
